@@ -22,7 +22,7 @@ namespace UKTaxCalculator
             double income = Double.Parse(Console.ReadLine());
 
             // Output income
-            Console.WriteLine("Your total taxable amount is: " + calculateTaxable(income) + " tax");
+            Console.WriteLine("Total taxable is: " + calculateTaxable(income) );
 
             // Wait for user to end program
             Console.ReadKey();
