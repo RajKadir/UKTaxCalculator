@@ -23,12 +23,10 @@ namespace UKTaxCalculator
 
             double taxable = CalculateTaxable(grossIncome);
             double taxPercentage = CalculateTaxBands(grossIncome);
-            double taxPaid = taxable * taxPercentage;
+            double taxPaid = CalculateIncomeTax(taxable, taxPercentage);
+            double weeklyWage = CalculateWeeklyWage(grossIncome);
 
-
-            double weeklyWage = grossIncome / 52;
-
-            double nationalInsurance = ((weeklyWage - 162) * 0.12) * 52;
+            double nationalInsurance = CalculateNationalInsurance(weeklyWage);
 
 
             // Output income
@@ -44,6 +42,67 @@ namespace UKTaxCalculator
             // Wait for user to end program
             Console.ReadKey();
 
+        }
+
+        /**
+         * For example, if you earn £1,000 a week, you pay:
+         * nothing on the first £162
+         * 12% (£87.60) on the next £730
+         * 2% (£2.16) on the next £108.
+         **/
+        static double CalculateNationalInsurance(double weeklyWage)
+        {
+            double nationalInsurance = 0;
+            double weeklyAllowance = 162;
+
+            // If our wekly wage is greater than allowance we are eligible for tax
+            if(weeklyWage > weeklyAllowance)
+            {
+                // on the first 730 after (162) tax by 12%
+                double taxable = weeklyWage - weeklyAllowance;
+                double sumTax = 0;
+
+                // do we have values fitting in this range
+                if(taxable - 730 < 0)
+                {
+                    // tax by 12%
+                    sumTax = (taxable) * 0.12;
+                }
+                else
+                {
+                    // We have a value greater than 730 so we need to apply two taxes
+                    sumTax = (730) * 0.12;
+
+                    // Apply another tax
+                    double twoTax = taxable - 730;
+
+                    if(twoTax < 108)
+                    {
+                        sumTax += (twoTax) * 0.02;
+                    }
+                    else
+                    {
+                        // Apply the maximum
+                        sumTax += (108) * 0.02;
+                    }
+                }
+
+
+                // Multiply back the sumTax by 52 weeks
+                nationalInsurance = sumTax * 52;
+            }
+
+            return nationalInsurance;
+        }
+
+        static double CalculateIncomeTax(double taxableAmount, double taxPercentage)
+        {
+            return taxableAmount * taxPercentage;
+        }
+
+        static double CalculateWeeklyWage(double grossIncome)
+        {
+            return grossIncome / 52;
         }
 
         /**
@@ -67,24 +126,22 @@ namespace UKTaxCalculator
 
         /**
          * Calculate tax bands 
+         * Personal Allowance  Up to £11,850   0 %
+         * Basic rate  £11,851 to £46,350  20 %
+         * Higher rate £46,351 to £150,000 40 %
+         * Additional rate over £150,000   45 %
          * */
-         static double CalculateTaxBands(double amount)
+         static double CalculateTaxBands(double grossIncome)
          {
             double percentageTax = 0;
-            /*
-             * Personal Allowance  Up to £11,850   0 %
-             * Basic rate  £11,851 to £46,350  20 %
-             * Higher rate £46,351 to £150,000 40 %
-             * Additional rate over £150,000   45 %
-             */
 
-            if(amount >= 11851 && amount <= 46350)
+            if(grossIncome >= 11851 && grossIncome <= 46350)
             {
                 percentageTax = 0.20;
-            }else if(amount >= 46351 && amount <= 150000)
+            }else if(grossIncome >= 46351 && grossIncome <= 150000)
             {
                 percentageTax = 0.40;
-            }else if(amount > 150000)
+            }else if(grossIncome > 150000)
             {
                 percentageTax = 0.45;
             }
@@ -94,20 +151,6 @@ namespace UKTaxCalculator
 
          static double CalculateNetIncome(double grossIncome, double taxPaid, double nationalInsuarance)
          {
-            /*
-            double basicPersonalAllowance = 11850.0;
-            double netIncome = 0;
-            double taxed = taxableAmount * taxPercentage;
-
-            if( (taxableAmount + basicPersonalAllowance) < 123700)
-            {
-                netIncome = taxableAmount - (taxed) + basicPersonalAllowance;
-            }
-            else
-            {
-                netIncome = taxableAmount - (taxed);
-            }*/
-
             return grossIncome - taxPaid - nationalInsuarance;
          }
     }
