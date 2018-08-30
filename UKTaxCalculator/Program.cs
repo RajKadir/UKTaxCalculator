@@ -15,38 +15,50 @@ namespace UKTaxCalculator
         static void CalculateTax()
         {
             // Ask for income
-            Console.WriteLine("What is your yearly income? (all numbers no commas or spaces");
+            Console.WriteLine("What is your yearly income? (all numbers e.g. 44000)");
 
             // Store income from user
             double grossIncome = Double.Parse(Console.ReadLine());
+            Console.WriteLine("------------------------------------");
 
             double taxable = CalculateTaxable(grossIncome);
-            double taxPercentage = CalculateTaxBands(grossIncome);
-            double taxPaid = CalculateIncomeTax(taxable, taxPercentage);
+            double highestTaxPercentage = CalculateTaxBands(grossIncome);
+            double taxPaid = CalculateIncomeTax(taxable, highestTaxPercentage);
             double weeklyWage = CalculateWeeklyWage(grossIncome);
             double nationalInsurance = CalculateWeeklyNationalInsurance(weeklyWage);
 
 
             // Output income
-            Console.WriteLine("Total taxable is: " + taxable);
-            Console.WriteLine("You fall under tax percentage: " + taxPercentage);
-            Console.WriteLine("Tax paid: " + taxPaid);
-            Console.WriteLine("Weekly National Insurance: " + nationalInsurance);
+            Console.WriteLine("Your Total Taxable: " + taxable);
+            Console.WriteLine("Your Highest tax band: " + highestTaxPercentage);
+            Console.WriteLine("Yearly Tax paid: " + taxPaid);
+
+            
+            Console.WriteLine("Weekly National Insurance: " + Round(nationalInsurance));
+
+            
+
+            Console.WriteLine("Yearly National Insurance: " + Round(nationalInsurance * 52));
             Console.WriteLine("You take home: " + CalculateNetIncome(grossIncome, taxPaid, nationalInsurance*52));
 
             // Wait for user to end program
             Console.ReadKey();
         }
 
+        static string Round(double val)
+        {
+            return String.Format("{0:0.00}", val); ;
+        }
+
         static void PrintWelcomeMessage()
         {
             // String interpolation
-            string version = "0.0.1";
+            string version = "0.0.5";
             string author = "Raj";
             string email = "raj.nry.k@gmail.com";
 
             // Intro text
-            Console.WriteLine("Welcome to my UK tax calculator ");
+            Console.WriteLine("Welcome to my UK tax calculator (except Scotland)");
             Console.WriteLine($"author: {author}, version: {version}, email: {email} \n");
         }
 
@@ -85,28 +97,62 @@ namespace UKTaxCalculator
 
         static double CalculateTwoPercentNI(double nationalInsurance, double taxable)
         {
-            // We have a value greater than 730 so we need to apply two taxes
+            // Apply the original tax which maxes on 730
             nationalInsurance = (730) * 0.12;
 
-            // Apply another tax
+            // Calculate our new taxable amount (take off 730)
             double twoTax = taxable - 730;
 
-            if (twoTax < 108)
-            {
-                nationalInsurance += (twoTax) * 0.02;
-            }
-            else
-            {
-                // Apply the maximum
-                nationalInsurance += (108) * 0.02;
-            }
+            // Apply another tax
+            nationalInsurance += (twoTax) * 0.02;
 
             return nationalInsurance;
         }
 
         static double CalculateIncomeTax(double taxableAmount, double taxPercentage)
         {
-            return taxableAmount * taxPercentage;
+            // Depending on the tax Percentage we need to work out which bands we apply to
+            double incomeTax = 0;
+
+            // Firstly apply 20% tax on the first 34,499
+            if(taxableAmount - 34999 < 0)
+            {
+                incomeTax += CalculateTwentyPercentTax(taxableAmount);
+            }
+            else
+            {
+                incomeTax = ApplyHigherTaxes(incomeTax, taxableAmount);
+            }
+            return incomeTax;
+        }
+
+        static double ApplyHigherTaxes(double incomeTax, double taxableAmount)
+        {
+            // its higher (apply max amount)
+            incomeTax += 34999 * 0.2;
+            Console.WriteLine("20% income tax applied: " + incomeTax);
+
+            // take off the previous taxableAmount
+            taxableAmount -= 34999;
+
+            // Now try and add a 40% tax with the next
+            if (taxableAmount < 150000)
+            {
+                incomeTax += CalculateFortyPercentTax(taxableAmount);
+            }
+            else
+            {
+                // Apply (maximum amount) 40%
+                incomeTax += CalculateFortyPercentTax(103649);
+
+                // take off previous 
+                taxableAmount -= 103649;
+
+                // Now apply 0.45% on the rest over 150k
+                incomeTax += CalculateFortyFivePercentTax(taxableAmount);
+            }
+
+            return incomeTax;
         }
 
         static double CalculateWeeklyWage(double grossIncome)
@@ -127,11 +173,34 @@ namespace UKTaxCalculator
             if (amount < 123700)
             {
                 taxable = amount - basicPersonalAllowance;
+
+                // Cannot have negative tax
+                if (taxable < 0) taxable = 0;
             }
 
             return taxable;
         }
 
+        static double CalculateTwentyPercentTax(double taxableAmount)
+        {
+            double twentyTax = taxableAmount * 0.2;
+            Console.WriteLine("20% income tax applied: " + twentyTax);
+            return twentyTax;
+        }
+
+        static double CalculateFortyPercentTax(double taxableAmount)
+        {
+            double fortyTax = taxableAmount * 0.4;
+            Console.WriteLine("40% income tax applied: " + fortyTax);
+            return fortyTax;
+        }
+
+        static double CalculateFortyFivePercentTax(double taxableAmount)
+        {
+            double fortfiveTax = taxableAmount * 0.45;
+            Console.WriteLine("45% income tax applied: " + fortfiveTax);
+            return fortfiveTax;
+        }
 
         /**
          * Calculate tax bands 
