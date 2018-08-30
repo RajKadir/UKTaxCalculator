@@ -4,10 +4,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UKTaxCalculatorTest
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitTestTaxes
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestTaxBands()
         {
         }
     }
