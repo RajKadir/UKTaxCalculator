@@ -117,9 +117,7 @@ namespace UKTaxCalculator
             // Firstly apply 20% tax on the first 34,499
             if(taxableAmount - 34999 < 0)
             {
-                incomeTax += taxableAmount * 0.2;
-
-                Console.WriteLine("20% income tax applied: " + incomeTax);
+                incomeTax += CalculateTwentyPercentTax(taxableAmount);
             }
             else
             {
@@ -127,36 +125,26 @@ namespace UKTaxCalculator
                 incomeTax += 34999 * 0.2;
                 Console.WriteLine("20% income tax applied: " + incomeTax);
 
-
-                
-
                 // Now try and add a 40% tax with the next
                 if(taxableAmount < 150000)
                 {
-                    incomeTax += taxableAmount * 0.4;
-                    Console.WriteLine("40% income tax applied: " + taxableAmount * 0.4);
+                    incomeTax += CalculateFortyPercentTax(taxableAmount);
                 }
                 else
                 {
                     // take off the previous taxableAmount
                     taxableAmount -= 34999;
 
-
-                    incomeTax += 103649 * 0.4;
-                    Console.WriteLine("40% income tax applied: " + 103649 * 0.4);
+                    // Apply (maximum amount) 40%
+                    incomeTax += CalculateFortyPercentTax(103649);
 
                     // take off previous 
                     taxableAmount -= 103649;
 
                     // Now apply 0.45% on the rest over 150k
-                    incomeTax += taxableAmount * 0.45;
-                    Console.WriteLine("45% income tax applied: " + taxableAmount * 0.45);
+                    incomeTax += CalculateFortyFivePercentTax(taxableAmount);
                 }
             }
-
-
-
-
             return incomeTax;
         }
 
@@ -188,17 +176,23 @@ namespace UKTaxCalculator
 
         static double CalculateTwentyPercentTax(double taxableAmount)
         {
-            return taxableAmount * 0.2;
+            double twentyTax = taxableAmount * 0.2;
+            Console.WriteLine("20% income tax applied: " + twentyTax);
+            return twentyTax;
         }
 
         static double CalculateFortyPercentTax(double taxableAmount)
         {
-            return taxableAmount * 0.4;
+            double fortyTax = taxableAmount * 0.4;
+            Console.WriteLine("40% income tax applied: " + fortyTax * 0.4);
+            return fortyTax;
         }
 
         static double CalculateFortyFivePercentTax(double taxableAmount)
         {
-            return taxableAmount * 0.45;
+            double fortfiveTax = taxableAmount * 0.45;
+            Console.WriteLine("45% income tax applied: " + taxableAmount * 0.45);
+            return fortfiveTax;
         }
 
         /**
