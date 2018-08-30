@@ -26,7 +26,7 @@ namespace UKTaxCalculator
             double taxPaid = CalculateIncomeTax(taxable, taxPercentage);
             double weeklyWage = CalculateWeeklyWage(grossIncome);
 
-            double nationalInsurance = CalculateNationalInsurance(weeklyWage);
+            double nationalInsurance = CalculateWeeklyNationalInsurance(weeklyWage);
 
 
             // Output income
@@ -50,7 +50,7 @@ namespace UKTaxCalculator
          * 12% (£87.60) on the next £730
          * 2% (£2.16) on the next £108.
          **/
-        static double CalculateNationalInsurance(double weeklyWage)
+        static double CalculateWeeklyNationalInsurance(double weeklyWage)
         {
             double nationalInsurance = 0;
             double weeklyAllowance = 162;
@@ -60,36 +60,39 @@ namespace UKTaxCalculator
             {
                 // on the first 730 after (162) tax by 12%
                 double taxable = weeklyWage - weeklyAllowance;
-                double sumTax = 0;
 
                 // do we have values fitting in this range
                 if(taxable - 730 < 0)
                 {
-                    // tax by 12%
-                    sumTax = (taxable) * 0.12;
+                    // apply 12% tax on next 730
+                    nationalInsurance = (taxable) * 0.12;
                 }
                 else
                 {
-                    // We have a value greater than 730 so we need to apply two taxes
-                    sumTax = (730) * 0.12;
-
-                    // Apply another tax
-                    double twoTax = taxable - 730;
-
-                    if(twoTax < 108)
-                    {
-                        sumTax += (twoTax) * 0.02;
-                    }
-                    else
-                    {
-                        // Apply the maximum
-                        sumTax += (108) * 0.02;
-                    }
+                    // apply a 2% tax on next 108
+                    nationalInsurance += CalculateTwoPercentNI(nationalInsurance, taxable);
                 }
+            }
 
+            return nationalInsurance;
+        }
 
-                // Multiply back the sumTax by 52 weeks
-                nationalInsurance = sumTax * 52;
+        static double CalculateTwoPercentNI(double nationalInsurance, double taxable)
+        {
+            // We have a value greater than 730 so we need to apply two taxes
+            nationalInsurance = (730) * 0.12;
+
+            // Apply another tax
+            double twoTax = taxable - 730;
+
+            if (twoTax < 108)
+            {
+                nationalInsurance += (twoTax) * 0.02;
+            }
+            else
+            {
+                // Apply the maximum
+                nationalInsurance += (108) * 0.02;
             }
 
             return nationalInsurance;
