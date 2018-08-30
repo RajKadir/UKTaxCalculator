@@ -6,15 +6,14 @@ namespace UKTaxCalculator
     {
         static void Main(string[] args)
         {
-            // String interpolation
-            string version = "0.0.1";
-            string author = "Raj";
-            string email = "raj.nry.k@gmail.com";
+            // Info about program
+            PrintWelcomeMessage();
+            // Main program execution
+            CalculateTax();
+        }
 
-            // Intro text
-            Console.WriteLine("Welcome to my UK tax calculator ");
-            Console.WriteLine($"author: {author}, version: {version}, email: {email} \n");
-
+        static void CalculateTax()
+        {
             // Ask for income
             Console.WriteLine("What is your yearly income? (all numbers no commas or spaces");
 
@@ -25,23 +24,30 @@ namespace UKTaxCalculator
             double taxPercentage = CalculateTaxBands(grossIncome);
             double taxPaid = CalculateIncomeTax(taxable, taxPercentage);
             double weeklyWage = CalculateWeeklyWage(grossIncome);
-
             double nationalInsurance = CalculateWeeklyNationalInsurance(weeklyWage);
 
 
             // Output income
-            Console.WriteLine("Total taxable is: " + taxable );
-
+            Console.WriteLine("Total taxable is: " + taxable);
             Console.WriteLine("You fall under tax percentage: " + taxPercentage);
-
             Console.WriteLine("Tax paid: " + taxPaid);
-            Console.WriteLine("National Insurance: " + nationalInsurance);
-
-            Console.WriteLine("You take home: " + CalculateNetIncome(grossIncome, taxPaid, nationalInsurance));
+            Console.WriteLine("Weekly National Insurance: " + nationalInsurance);
+            Console.WriteLine("You take home: " + CalculateNetIncome(grossIncome, taxPaid, nationalInsurance*52));
 
             // Wait for user to end program
             Console.ReadKey();
+        }
 
+        static void PrintWelcomeMessage()
+        {
+            // String interpolation
+            string version = "0.0.1";
+            string author = "Raj";
+            string email = "raj.nry.k@gmail.com";
+
+            // Intro text
+            Console.WriteLine("Welcome to my UK tax calculator ");
+            Console.WriteLine($"author: {author}, version: {version}, email: {email} \n");
         }
 
         /**
