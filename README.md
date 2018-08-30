@@ -5,4 +5,4 @@
 A simple calculator for UK taxes, written in C#.NET (console application)
 
 
-![Main](../master/screenshots/main.JPG)
+![Main](../master/Screenshots/main.JPG)
