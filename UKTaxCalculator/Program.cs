@@ -22,7 +22,7 @@ namespace UKTaxCalculator
             double income = Double.Parse(Console.ReadLine());
 
             // Output income
-            Console.WriteLine("Total taxable is: " + calculateTaxable(income) );
+            Console.WriteLine("Total taxable is: " + CalculateTaxable(income) );
 
             // Wait for user to end program
             Console.ReadKey();
@@ -31,7 +31,7 @@ namespace UKTaxCalculator
         /**
          * Calculates the amount taxable
          **/
-        static double calculateTaxable(double amount)
+        static double CalculateTaxable(double amount)
         {
             // basic allowance which is not taxed
             double basicPersonalAllowance = 11850.0;
