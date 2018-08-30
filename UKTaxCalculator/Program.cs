@@ -121,30 +121,37 @@ namespace UKTaxCalculator
             }
             else
             {
-                // its higher (apply max amount)
-                incomeTax += 34999 * 0.2;
-                Console.WriteLine("20% income tax applied: " + incomeTax);
-
-                // Now try and add a 40% tax with the next
-                if(taxableAmount < 150000)
-                {
-                    incomeTax += CalculateFortyPercentTax(taxableAmount);
-                }
-                else
-                {
-                    // take off the previous taxableAmount
-                    taxableAmount -= 34999;
-
-                    // Apply (maximum amount) 40%
-                    incomeTax += CalculateFortyPercentTax(103649);
-
-                    // take off previous 
-                    taxableAmount -= 103649;
-
-                    // Now apply 0.45% on the rest over 150k
-                    incomeTax += CalculateFortyFivePercentTax(taxableAmount);
-                }
+                incomeTax = ApplyHigherTaxes(incomeTax, taxableAmount);
             }
+            return incomeTax;
+        }
+
+        static double ApplyHigherTaxes(double incomeTax, double taxableAmount)
+        {
+            // its higher (apply max amount)
+            incomeTax += 34999 * 0.2;
+            Console.WriteLine("20% income tax applied: " + incomeTax);
+
+            // take off the previous taxableAmount
+            taxableAmount -= 34999;
+
+            // Now try and add a 40% tax with the next
+            if (taxableAmount < 150000)
+            {
+                incomeTax += CalculateFortyPercentTax(taxableAmount);
+            }
+            else
+            {
+                // Apply (maximum amount) 40%
+                incomeTax += CalculateFortyPercentTax(103649);
+
+                // take off previous 
+                taxableAmount -= 103649;
+
+                // Now apply 0.45% on the rest over 150k
+                incomeTax += CalculateFortyFivePercentTax(taxableAmount);
+            }
+
             return incomeTax;
         }
 
@@ -184,14 +191,14 @@ namespace UKTaxCalculator
         static double CalculateFortyPercentTax(double taxableAmount)
         {
             double fortyTax = taxableAmount * 0.4;
-            Console.WriteLine("40% income tax applied: " + fortyTax * 0.4);
+            Console.WriteLine("40% income tax applied: " + fortyTax);
             return fortyTax;
         }
 
         static double CalculateFortyFivePercentTax(double taxableAmount)
         {
             double fortfiveTax = taxableAmount * 0.45;
-            Console.WriteLine("45% income tax applied: " + taxableAmount * 0.45);
+            Console.WriteLine("45% income tax applied: " + fortfiveTax);
             return fortfiveTax;
         }
 
