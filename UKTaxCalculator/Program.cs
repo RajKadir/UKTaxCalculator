@@ -19,6 +19,7 @@ namespace UKTaxCalculator
 
             // Store income from user
             double grossIncome = Double.Parse(Console.ReadLine());
+            Console.WriteLine("------------------------------------");
 
             double taxable = CalculateTaxable(grossIncome);
             double highestTaxPercentage = CalculateTaxBands(grossIncome);
@@ -28,20 +29,31 @@ namespace UKTaxCalculator
 
 
             // Output income
-            Console.WriteLine("Total taxable is: " + taxable);
-            Console.WriteLine("Your highest tax percentage is : " + highestTaxPercentage);
-            Console.WriteLine("Tax paid: " + taxPaid);
-            Console.WriteLine("Weekly National Insurance: " + nationalInsurance);
+            Console.WriteLine("Your Total Taxable: " + taxable);
+            Console.WriteLine("Your Highest tax band: " + highestTaxPercentage);
+            Console.WriteLine("Yearly Tax paid: " + taxPaid);
+
+            
+            Console.WriteLine("Weekly National Insurance: " + Round(nationalInsurance));
+
+            
+
+            Console.WriteLine("Yearly National Insurance: " + Round(nationalInsurance * 52));
             Console.WriteLine("You take home: " + CalculateNetIncome(grossIncome, taxPaid, nationalInsurance*52));
 
             // Wait for user to end program
             Console.ReadKey();
         }
 
+        static string Round(double val)
+        {
+            return String.Format("{0:0.00}", val); ;
+        }
+
         static void PrintWelcomeMessage()
         {
             // String interpolation
-            string version = "0.0.1";
+            string version = "0.0.5";
             string author = "Raj";
             string email = "raj.nry.k@gmail.com";
 
@@ -107,13 +119,13 @@ namespace UKTaxCalculator
             {
                 incomeTax += taxableAmount * 0.2;
 
-                Console.WriteLine("20% income tax: " + incomeTax);
+                Console.WriteLine("20% income tax applied: " + incomeTax);
             }
             else
             {
                 // its higher (apply max amount)
                 incomeTax += 34999 * 0.2;
-                Console.WriteLine("20% income tax: " + incomeTax);
+                Console.WriteLine("20% income tax applied: " + incomeTax);
 
 
                 
@@ -122,24 +134,23 @@ namespace UKTaxCalculator
                 if(taxableAmount < 150000)
                 {
                     incomeTax += taxableAmount * 0.4;
-                    Console.WriteLine("40% income tax: " + taxableAmount * 0.4);
+                    Console.WriteLine("40% income tax applied: " + taxableAmount * 0.4);
                 }
                 else
                 {
                     // take off the previous taxableAmount
                     taxableAmount -= 34999;
 
-                    Console.WriteLine("Eligible for 45% tax");
 
                     incomeTax += 103649 * 0.4;
-                    Console.WriteLine("40% income tax: " + 103649 * 0.4);
+                    Console.WriteLine("40% income tax applied: " + 103649 * 0.4);
 
                     // take off previous 
                     taxableAmount -= 103649;
 
                     // Now apply 0.45% on the rest over 150k
                     incomeTax += taxableAmount * 0.45;
-                    Console.WriteLine("45% income tax: " + taxableAmount * 0.45);
+                    Console.WriteLine("45% income tax applied: " + taxableAmount * 0.45);
                 }
             }
 
