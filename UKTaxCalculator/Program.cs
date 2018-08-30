@@ -15,21 +15,21 @@ namespace UKTaxCalculator
         static void CalculateTax()
         {
             // Ask for income
-            Console.WriteLine("What is your yearly income? (all numbers no commas or spaces");
+            Console.WriteLine("What is your yearly income? (all numbers e.g. 44000)");
 
             // Store income from user
             double grossIncome = Double.Parse(Console.ReadLine());
 
             double taxable = CalculateTaxable(grossIncome);
-            double taxPercentage = CalculateTaxBands(grossIncome);
-            double taxPaid = CalculateIncomeTax(taxable, taxPercentage);
+            double highestTaxPercentage = CalculateTaxBands(grossIncome);
+            double taxPaid = CalculateIncomeTax(taxable, highestTaxPercentage);
             double weeklyWage = CalculateWeeklyWage(grossIncome);
             double nationalInsurance = CalculateWeeklyNationalInsurance(weeklyWage);
 
 
             // Output income
             Console.WriteLine("Total taxable is: " + taxable);
-            Console.WriteLine("You fall under tax percentage: " + taxPercentage);
+            Console.WriteLine("Your highest tax percentage is : " + highestTaxPercentage);
             Console.WriteLine("Tax paid: " + taxPaid);
             Console.WriteLine("Weekly National Insurance: " + nationalInsurance);
             Console.WriteLine("You take home: " + CalculateNetIncome(grossIncome, taxPaid, nationalInsurance*52));
@@ -46,7 +46,7 @@ namespace UKTaxCalculator
             string email = "raj.nry.k@gmail.com";
 
             // Intro text
-            Console.WriteLine("Welcome to my UK tax calculator ");
+            Console.WriteLine("Welcome to my UK tax calculator (except Scotland)");
             Console.WriteLine($"author: {author}, version: {version}, email: {email} \n");
         }
 
@@ -99,7 +99,54 @@ namespace UKTaxCalculator
 
         static double CalculateIncomeTax(double taxableAmount, double taxPercentage)
         {
-            return taxableAmount * taxPercentage;
+            // Depending on the tax Percentage we need to work out which bands we apply to
+            double incomeTax = 0;
+
+            // Firstly apply 20% tax on the first 34,499
+            if(taxableAmount - 34999 < 0)
+            {
+                incomeTax += taxableAmount * 0.2;
+
+                Console.WriteLine("20% income tax: " + incomeTax);
+            }
+            else
+            {
+                // its higher (apply max amount)
+                incomeTax += 34999 * 0.2;
+                Console.WriteLine("20% income tax: " + incomeTax);
+
+
+                
+
+                // Now try and add a 40% tax with the next
+                if(taxableAmount < 150000)
+                {
+                    incomeTax += taxableAmount * 0.4;
+                    Console.WriteLine("40% income tax: " + taxableAmount * 0.4);
+                }
+                else
+                {
+                    // take off the previous taxableAmount
+                    taxableAmount -= 34999;
+
+                    Console.WriteLine("Eligible for 45% tax");
+
+                    incomeTax += 103649 * 0.4;
+                    Console.WriteLine("40% income tax: " + 103649 * 0.4);
+
+                    // take off previous 
+                    taxableAmount -= 103649;
+
+                    // Now apply 0.45% on the rest over 150k
+                    incomeTax += taxableAmount * 0.45;
+                    Console.WriteLine("45% income tax: " + taxableAmount * 0.45);
+                }
+            }
+
+
+
+
+            return incomeTax;
         }
 
         static double CalculateWeeklyWage(double grossIncome)
