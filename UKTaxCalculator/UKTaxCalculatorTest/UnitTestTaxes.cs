@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UKTaxCalculator;
 
 namespace UKTaxCalculatorTest
 {
@@ -9,6 +10,8 @@ namespace UKTaxCalculatorTest
         [TestMethod]
         public void TestTaxBands()
         {
+            double grossIncome = 45000;
+            Assert.AreEqual(Program.CalculateTaxBands(grossIncome), 0.2, "Tax bands not correct");
         }
     }
 }

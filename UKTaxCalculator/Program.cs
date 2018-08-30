@@ -216,7 +216,7 @@ namespace UKTaxCalculator
          * Higher rate £46,351 to £150,000 40 %
          * Additional rate over £150,000   45 %
          * */
-         static double CalculateTaxBands(double grossIncome)
+         public static double CalculateTaxBands(double grossIncome)
          {
             double percentageTax = 0;
 
