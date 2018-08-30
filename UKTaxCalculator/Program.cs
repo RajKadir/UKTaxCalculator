@@ -39,7 +39,11 @@ namespace UKTaxCalculator
             
 
             Console.WriteLine("Yearly National Insurance: " + Round(nationalInsurance * 52));
+            Console.WriteLine("------------------------------------");
+
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("You take home: " + CalculateNetIncome(grossIncome, taxPaid, nationalInsurance*52));
+            Console.ResetColor();
 
             // Wait for user to end program
             Console.ReadKey();
@@ -57,9 +61,12 @@ namespace UKTaxCalculator
             string author = "Raj";
             string email = "raj.nry.k@gmail.com";
 
+            Console.ForegroundColor = ConsoleColor.Blue;
             // Intro text
             Console.WriteLine("Welcome to my UK tax calculator (except Scotland)");
             Console.WriteLine($"author: {author}, version: {version}, email: {email} \n");
+            Console.WriteLine("------------------------------------");
+            Console.ResetColor();
         }
 
         /**
