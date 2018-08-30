@@ -85,21 +85,14 @@ namespace UKTaxCalculator
 
         static double CalculateTwoPercentNI(double nationalInsurance, double taxable)
         {
-            // We have a value greater than 730 so we need to apply two taxes
+            // Apply the original tax which maxes on 730
             nationalInsurance = (730) * 0.12;
 
-            // Apply another tax
+            // Calculate our new taxable amount (take off 730)
             double twoTax = taxable - 730;
 
-            if (twoTax < 108)
-            {
-                nationalInsurance += (twoTax) * 0.02;
-            }
-            else
-            {
-                // Apply the maximum
-                nationalInsurance += (108) * 0.02;
-            }
+            // Apply another tax
+            nationalInsurance += (twoTax) * 0.02;
 
             return nationalInsurance;
         }
@@ -127,11 +120,28 @@ namespace UKTaxCalculator
             if (amount < 123700)
             {
                 taxable = amount - basicPersonalAllowance;
+
+                // Cannot have negative tax
+                if (taxable < 0) taxable = 0;
             }
 
             return taxable;
         }
 
+        static double CalculateTwentyPercentTax(double taxableAmount)
+        {
+            return taxableAmount * 0.2;
+        }
+
+        static double CalculateFortyPercentTax(double taxableAmount)
+        {
+            return taxableAmount * 0.4;
+        }
+
+        static double CalculateFortyFivePercentTax(double taxableAmount)
+        {
+            return taxableAmount * 0.45;
+        }
 
         /**
          * Calculate tax bands 
