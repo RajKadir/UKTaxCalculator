@@ -75,7 +75,7 @@ namespace UKTaxCalculator
          * 12% (£87.60) on the next £730
          * 2% (£2.16) on the next £108.
          **/
-        static double CalculateWeeklyNationalInsurance(double weeklyWage)
+        public static double CalculateWeeklyNationalInsurance(double weeklyWage)
         {
             double nationalInsurance = 0;
             double weeklyAllowance = 162;
@@ -133,7 +133,7 @@ namespace UKTaxCalculator
             return incomeTax;
         }
 
-        static double ApplyHigherTaxes(double incomeTax, double taxableAmount)
+        public static double ApplyHigherTaxes(double incomeTax, double taxableAmount)
         {
             // its higher (apply max amount)
             incomeTax += 34999 * 0.2;
