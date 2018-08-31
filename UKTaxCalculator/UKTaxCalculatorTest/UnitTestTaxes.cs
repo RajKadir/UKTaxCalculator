@@ -36,5 +36,13 @@ namespace UKTaxCalculatorTest
             double weeklyWage = 50;
             Assert.AreEqual(Program.CalculateWeeklyNationalInsurance(weeklyWage), 0);
         }
+
+        [TestMethod]
+        public void given500WeeklyNationalInsurance()
+        {
+            // I should be paying (500-162) * 0.12% tax
+            double weeklyWage = 500;
+            Assert.AreEqual(Program.CalculateWeeklyNationalInsurance(weeklyWage), 40.56, 1.0);
+        }
     }
 }
