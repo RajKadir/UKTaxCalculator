@@ -22,6 +22,19 @@ namespace UKTaxCalculatorTest
             Assert.AreEqual(Program.CalculateTaxBands(grossIncome), 0.4, "Tax bands not correct");
         }
 
+        [TestMethod]
+        public void TestFortFivePercentTaxBand()
+        {
+            double grossIncome = 500000;
+            Assert.AreEqual(Program.CalculateTaxBands(grossIncome), 0.45, "Tax bands not correct");
+        }
 
+        [TestMethod]
+        public void TestNoNationalInsurance()
+        {
+            // I should not be paying National Insurance
+            double weeklyWage = 50;
+            Assert.AreEqual(Program.CalculateWeeklyNationalInsurance(weeklyWage), 0);
+        }
     }
 }
